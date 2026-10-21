@@ -45,6 +45,9 @@ is ignored, and a file that doesn't parse is ignored as a whole, so a theme can 
 | `icon_only_buttons` | bool | Wi-Fi and Settings as round icon buttons; Inputs keeps its label (`false` by default) |
 | `wifi_label_width` | 0 to 300 | With `icon_only_buttons`, keep the network name on the Wi-Fi pill up to this width in dp, cut with an ellipsis; 0 leaves only the icon |
 | `library_button` | bool | The app library as a round button in the top bar, beside Settings; needs `app_library`. Closing the library returns to it |
+| `tile_names` | bool | Names under tiles at all (`true` by default); `false` drops the name row entirely, the focused tile included, and widens the padding so rows keep a gap. For layouts that read from the artwork alone |
+| `focus_lift` | bool | Focused tile scales 1.12 and lifts 4dp without the icon zoom, ambient fade and app-open effects `advanced_effects` also brings. A view transform only: no shadow, no blur, no extra layer |
+| `horizon_background` | bool | One static elliptical radial gradient behind everything, deep blue at the centre falling to near-black, in place of `background_color`. No bitmap and no animation, so it costs a single full-screen fill |
 | `always_show_names` | bool | Names under every tile, dimmed until focused, the dock included (its band grows to hold them); `false` by default shows only the focused tile's name |
 | `wallpaper_true_color` | bool | Decode wallpapers in 32-bit colour (8 MB at 1080p) instead of RGB_565 (4 MB), which bands dark gradients such as a night sky; for TVs with 2 GB or more (`false` by default) |
 | `app_library` | bool | An App library pill after the last Home row: every installed app, add one to Home or take it off (`false` by default). The choices stay on the TV when a theme is pushed or reset; see [docs/app-library.md](../docs/app-library.md) |

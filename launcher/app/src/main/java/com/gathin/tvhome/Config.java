@@ -73,6 +73,12 @@ final class Config {
     final boolean dockRow;
     /** Names under every tile, dimmed until focused (config.xml always_show_names); the dock band grows for them. */
     final boolean alwaysShowNames;
+    /** Tile names at all (config.xml tile_names); false drops the name row under every tile, focused included. */
+    final boolean tileNames;
+    /** Focused tile scales 1.12 and lifts 4dp (config.xml focus_lift) without the rest of advanced_effects. */
+    final boolean focusLift;
+    /** The "Horizon" elliptical gradient behind everything (config.xml horizon_background), in place of a flat colour. */
+    final boolean horizonBackground;
     /** Reorder button in the top bar (config.xml reorder_button); the Settings long-press menu offers it either way. */
     final boolean reorderButton;
     /** Show the Wi-Fi/Ethernet pill in the top bar (config.xml, show_network_pill). */
@@ -133,7 +139,7 @@ final class Config {
                    String liveTvAction, Map<String, String> launchActions, Map<String, String> appLabels,
                    Map<String, String> appBanners, String sourcePanelService, String sourcePanelAction, String inputAction,
                    int columns, int rowsBelowDock, boolean animations, boolean advancedEffects,
-                   boolean shamsiDate, String greetingName, boolean moduleCards, boolean reducedMotion, boolean dockTitle, boolean dockRow, boolean reorderButton, boolean showNetworkPill, boolean iconOnlyButtons, boolean libraryButton, int wifiLabelWidth, boolean alwaysShowNames, boolean wallpaperTrueColor, String vpnApp,
+                   boolean shamsiDate, String greetingName, boolean moduleCards, boolean reducedMotion, boolean dockTitle, boolean dockRow, boolean reorderButton, boolean showNetworkPill, boolean iconOnlyButtons, boolean libraryButton, int wifiLabelWidth, boolean alwaysShowNames, boolean tileNames, boolean focusLift, boolean horizonBackground, boolean wallpaperTrueColor, String vpnApp,
                    boolean showHomeSettingsShortcut, boolean showStats, boolean appLibrary, int backgroundColor, int skyIntensity,
                    int[] settingsKeycodes, boolean settingsKeyPanel, boolean wallpaperEnabled, File wallpaper, List<File> wallpapers,
                    int wallpaperRotationMinutes, int wallpaperDim, String wallpaperOrder, boolean overlayApplied,
@@ -168,6 +174,9 @@ final class Config {
         this.libraryButton = libraryButton;
         this.wifiLabelWidth = wifiLabelWidth;
         this.alwaysShowNames = alwaysShowNames;
+        this.tileNames = tileNames;
+        this.focusLift = focusLift;
+        this.horizonBackground = horizonBackground;
         this.wallpaperTrueColor = wallpaperTrueColor;
         this.vpnApp = vpnApp;
         this.showHomeSettingsShortcut = showHomeSettingsShortcut;
@@ -225,6 +234,9 @@ final class Config {
         boolean libraryButton = res.getBoolean(R.bool.library_button);
         int wifiLabelWidth = res.getInteger(R.integer.wifi_label_width);
         boolean alwaysShowNames = res.getBoolean(R.bool.always_show_names);
+        boolean tileNames = res.getBoolean(R.bool.tile_names);
+        boolean focusLift = res.getBoolean(R.bool.focus_lift);
+        boolean horizonBackground = res.getBoolean(R.bool.horizon_background);
         boolean wallpaperTrueColor = res.getBoolean(R.bool.wallpaper_true_color);
         String vpn = res.getString(R.string.vpn_app).trim();
         boolean homeSettings = res.getBoolean(R.bool.show_home_settings_shortcut);
@@ -274,6 +286,9 @@ final class Config {
             libraryButton = bool(json, "library_button", libraryButton);
             wifiLabelWidth = integer(json, "wifi_label_width", wifiLabelWidth, 0, 300);
             alwaysShowNames = bool(json, "always_show_names", alwaysShowNames);
+            tileNames = bool(json, "tile_names", tileNames);
+            focusLift = bool(json, "focus_lift", focusLift);
+            horizonBackground = bool(json, "horizon_background", horizonBackground);
             wallpaperTrueColor = bool(json, "wallpaper_true_color", wallpaperTrueColor);
             vpn = string(json, "vpn_app", vpn);
             homeSettings = bool(json, "show_home_settings_shortcut", homeSettings);
@@ -343,7 +358,7 @@ final class Config {
                 packageMap(appBanners), panelService,
                 panelAction, inputAction,
                 Math.max(1, columns), Math.max(0, rowsBelow), animations, advancedEffects,
-                shamsi, greetingName, moduleCards, reducedMotion, dockTitle, dockRow, reorderButton, showNetworkPill, iconOnlyButtons, libraryButton, wifiLabelWidth, alwaysShowNames, wallpaperTrueColor, vpn, homeSettings, showStats, library, background,
+                shamsi, greetingName, moduleCards, reducedMotion, dockTitle, dockRow, reorderButton, showNetworkPill, iconOnlyButtons, libraryButton, wifiLabelWidth, alwaysShowNames, tileNames, focusLift, horizonBackground, wallpaperTrueColor, vpn, homeSettings, showStats, library, background,
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow,

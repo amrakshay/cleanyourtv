@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"><style>body{margin:0;background:#efede8;font-family:Roboto,system-ui,sans-serif;color:#1a1a1a}a{color:#1a1a1a}a:hover{color:#2a78d6}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Roboto,sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 Roboto,sans-serif;color:rgba(0,0,0,.6)}.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 Roboto,sans-serif;color:rgba(0,0,0,.5)}</style></helmet>
+<section class="dv-turn" id="t2">
+  <div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Greeting by time of day on <a class="dv-oid" href="#1b">1b</a> · text only, ≈ 0 MB, checked once a minute with the clock tick</span></div>
+  <div class="dv-opts">
+    <div class="dv-opt" id="2a">
+      <div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>Morning · 5:00 – 11:59</div>
+      <div class="dv-card" style="width:640px"><dc-import name="TVHome" variant="b" tod="morning" scale="0.5" hint-size="640px,360px"></dc-import></div>
+    </div>
+    <div class="dv-opt" id="2b">
+      <div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>Afternoon · 12:00 – 16:59</div>
+      <div class="dv-card" style="width:640px"><dc-import name="TVHome" variant="b" tod="afternoon" scale="0.5" hint-size="640px,360px"></dc-import></div>
+    </div>
+    <div class="dv-opt" id="2c">
+      <div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>Evening · 17:00 – 22:59</div>
+      <div class="dv-card" style="width:640px"><dc-import name="TVHome" variant="b" tod="evening" scale="0.5" hint-size="640px,360px"></dc-import></div>
+    </div>
+    <div class="dv-opt" id="2d">
+      <div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>Late night · 23:00 – 4:59</div>
+      <div class="dv-card" style="width:640px"><dc-import name="TVHome" variant="b" tod="night" scale="0.5" hint-size="640px,360px"></dc-import></div>
+    </div>
+  </div>
+  <p class="dv-next">Try next: "change the late-night wording" · "shift the hour boundaries" · "write the config.json and code plan for <a class="dv-oid" href="#1b">1b</a>"</p>
+</section>
+<section class="dv-turn" id="t1">
+  <div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Four home-screen directions · 1280×720 · Mi TV 4A Pro (txlx)</span></div>
+  <div style="display:grid; grid-template-columns:repeat(4,minmax(0,280px)); gap:24px; margin:0 0 28px; font:400 12.5px/1.5 Roboto,sans-serif; color:rgba(0,0,0,.7)">
+    <div><div style="font:500 10px/1 'JetBrains Mono',monospace; letter-spacing:.08em; color:rgba(0,0,0,.45); margin-bottom:6px">FIXED ACROSS ALL</div>Top-left kept clear for the sticker. Greeting, clock and pills sit top-right. Dock order is Hotstar · YouTube · Netflix · VLC, in full-colour banners. Second row is visible. No tile labels and no big app title.</div>
+    <div><div style="font:500 10px/1 'JetBrains Mono',monospace; letter-spacing:.08em; color:rgba(0,0,0,.45); margin-bottom:6px">FOCUS</div>Lift plus 1.12× scale with a soft shadow. Use the remote arrows: click a frame, then press ← → ↑ ↓. With reduced motion on, the scale snaps in 110 ms with no overshoot.</div>
+    <div><div style="font:500 10px/1 'JetBrains Mono',monospace; letter-spacing:.08em; color:rgba(0,0,0,.45); margin-bottom:6px">TYPE</div>Roboto Thin and Light, which is <code>sans-serif-thin</code> / <code>-light</code> already on the TV. That's 0 bytes of bundled font. The clock redraws once a minute.</div>
+    <div><div style="font:500 10px/1 'JetBrains Mono',monospace; letter-spacing:.08em; color:rgba(0,0,0,.45); margin-bottom:6px">CAVEAT</div>All costs are <b>estimates, not measured</b>. I couldn't read <code>themes/README.md</code>, so the theme/code split is my assumption. Confirm with <code>dumpsys meminfo</code>.</div>
+  </div>
+  <div class="dv-opts">
+    <div class="dv-opt" id="1a">
+      <div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Quiet Band · refined version of today's home</div>
+      <div class="dv-card" style="width:1280px">
+        <dc-import name="TVHome" variant="a" guides="{{ guides }}" reduced-motion="{{ rm }}" hint-size="1280px,720px"></dc-import>
+        <div style="display:grid; grid-template-columns:220px minmax(0,1fr) minmax(0,1fr); gap:28px; padding:20px 24px; font:400 13px/1.5 Roboto,sans-serif; color:rgba(0,0,0,.72)">
+          <div style="display:flex; flex-direction:column; gap:6px; font:500 11px/1 'JetBrains Mono',monospace">
+            <span style="padding:5px 8px; background:#e6f2ea; color:#1d6b3a; border-radius:4px; align-self:flex-start">THEME ONLY (likely)</span>
+            <span style="padding:5px 8px; background:#f0efec; border-radius:4px; align-self:flex-start">MEM ≈ +0 MB</span>
+            <span style="padding:5px 8px; background:#f0efec; border-radius:4px; align-self:flex-start">OVERDRAW ≈ 2.5× at dock</span>
+          </div>
+          <div><b style="color:#1a1a1a">Look.</b> Today's blue glow, pushed down into the bottom 40% so the top half goes near-black. The dock band is a 3.5% white glass fill with a 1px rim. The clock is Thin at 66px with a tracked greeting.</div>
+          <div><b style="color:#1a1a1a">Cost.</b> The glow is a <code>GradientDrawable</code>, so no bitmap. The band adds one translucent full-width layer. The shadow on the focused tile should be a pre-baked 9-patch (~30 KB), not <code>elevation</code>, which triggers a blur on txlx.</div>
+        </div>
+      </div>
+    </div>
+    <div class="dv-opt" id="1b">
+      <div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Horizon · no band; tiles stand on one line of light</div>
+      <div class="dv-card" style="width:1280px">
+        <dc-import name="TVHome" variant="b" guides="{{ guides }}" reduced-motion="{{ rm }}" hint-size="1280px,720px"></dc-import>
+        <div style="display:grid; grid-template-columns:220px minmax(0,1fr) minmax(0,1fr); gap:28px; padding:20px 24px; font:400 13px/1.5 Roboto,sans-serif; color:rgba(0,0,0,.72)">
+          <div style="display:flex; flex-direction:column; gap:6px; font:500 11px/1 'JetBrains Mono',monospace">
+            <span style="padding:5px 8px; background:#fdf1dc; color:#8a5a08; border-radius:4px; align-self:flex-start">THEME + 1 VIEW</span>
+            <span style="padding:5px 8px; background:#f0efec; border-radius:4px; align-self:flex-start">MEM ≈ +0 MB</span>
+            <span style="padding:5px 8px; background:#f0efec; border-radius:4px; align-self:flex-start">OVERDRAW ≈ 2.0× (lowest)</span>
+          </div>
+          <div><b style="color:#1a1a1a">Look.</b> The greeting becomes the hero: sentence case, Light, 32px. Time and date go on a single line. With the band removed, the glow concentrates on a 1px horizon under the dock. This is the most "not a normal TV" of the four.</div>
+          <div><b style="color:#1a1a1a">Cost.</b> The band may be switchable off in the theme. The hairline is a 1px <code>View</code> with a gradient, roughly 5 lines in <code>activity_main.xml</code>. This is the cheapest GPU option because it removes a translucent layer.</div>
+        </div>
+      </div>
+    </div>
+    <div class="dv-opt" id="1c">
+      <div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Big Hour · the clock is the ornament</div>
+      <div class="dv-card" style="width:1280px">
+        <dc-import name="TVHome" variant="c" guides="{{ guides }}" reduced-motion="{{ rm }}" hint-size="1280px,720px"></dc-import>
+        <div style="display:grid; grid-template-columns:220px minmax(0,1fr) minmax(0,1fr); gap:28px; padding:20px 24px; font:400 13px/1.5 Roboto,sans-serif; color:rgba(0,0,0,.72)">
+          <div style="display:flex; flex-direction:column; gap:6px; font:500 11px/1 'JetBrains Mono',monospace">
+            <span style="padding:5px 8px; background:#fdf1dc; color:#8a5a08; border-radius:4px; align-self:flex-start">THEME or 1 LAYOUT EDIT</span>
+            <span style="padding:5px 8px; background:#f0efec; border-radius:4px; align-self:flex-start">MEM ≈ +0 MB</span>
+            <span style="padding:5px 8px; background:#f0efec; border-radius:4px; align-self:flex-start">CLOCK REDRAW 1×/min</span>
+          </div>
+          <div><b style="color:#1a1a1a">Look.</b> A 136px Thin clock gives typographic scale without any imagery. The greeting and date shrink to tracked caps around it. The dock drops 16px to give the clock room.</div>
+          <div><b style="color:#1a1a1a">Cost.</b> This is a single <code>TextView</code>, so it costs nothing, unless the clock size isn't a theme key, in which case it's a one-line <code>textSize</code> change. Risk: large Thin text can shimmer at 720p on some panels, so check it on the set.</div>
+        </div>
+      </div>
+    </div>
+    <div class="dv-opt" id="1d">
+      <div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Focus Tint · the glow takes on the focused app's colour</div>
+      <div class="dv-card" style="width:1280px">
+        <dc-import name="TVHome" variant="d" focus="dock1" guides="{{ guides }}" reduced-motion="{{ rm }}" hint-size="1280px,720px"></dc-import>
+        <div style="display:grid; grid-template-columns:220px minmax(0,1fr) minmax(0,1fr); gap:28px; padding:20px 24px; font:400 13px/1.5 Roboto,sans-serif; color:rgba(0,0,0,.72)">
+          <div style="display:flex; flex-direction:column; gap:6px; font:500 11px/1 'JetBrains Mono',monospace">
+            <span style="padding:5px 8px; background:#fbe4e1; color:#9a2a1c; border-radius:4px; align-self:flex-start">CODE · ~60 LINES JAVA</span>
+            <span style="padding:5px 8px; background:#f0efec; border-radius:4px; align-self:flex-start">MEM ≈ +0.1 MB</span>
+            <span style="padding:5px 8px; background:#f0efec; border-radius:4px; align-self:flex-start">FULL REDRAW 220 ms / focus move</span>
+          </div>
+          <div><b style="color:#1a1a1a">Look.</b> The bottom glow and band rim pick up each app's colour: violet for Hotstar, red for YouTube, amber for VLC. It's the strongest "personalised" signal, and it's still static while idle. Move focus to see it.</div>
+          <div><b style="color:#1a1a1a">Cost.</b> On focus change, <code>MainActivity</code> animates <code>GradientDrawable.setColors()</code> with an <code>ArgbEvaluator</code>. Hues are hard-coded per package, not pulled from banners. Risk: a full-screen repaint on every move could stutter when scrolling fast on txlx. Debounce by 120 ms. Under reduced motion, it snaps instead.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dv-thd" style="margin-top:44px"><span class="dv-tname">States, shown on <a class="dv-oid" href="#1a">1a</a> at 50%</span></div>
+  <div class="dv-opts">
+    <div class="dv-opt" id="1e">
+      <div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>Idle · after 60 s, chrome dims and the lift settles to 1.04×</div>
+      <div class="dv-card" style="width:640px"><dc-import name="TVHome" variant="a" dim="{{ true }}" scale="0.5" hint-size="640px,360px"></dc-import></div>
+      <div style="font:400 11px/1.4 'JetBrains Mono',monospace; color:rgba(0,0,0,.5); max-width:640px">One 400 ms fade, then zero redraws. Needs a code timer (Handler.postDelayed). Optional.</div>
+    </div>
+    <div class="dv-opt" id="1f">
+      <div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>Highlight on dock · Netflix</div>
+      <div class="dv-card" style="width:640px"><dc-import name="TVHome" variant="a" focus="dock2" scale="0.5" hint-size="640px,360px"></dc-import></div>
+    </div>
+    <div class="dv-opt" id="1g">
+      <div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>Highlight in grid · Live TV</div>
+      <div class="dv-card" style="width:640px"><dc-import name="TVHome" variant="a" focus="grid0" scale="0.5" hint-size="640px,360px"></dc-import></div>
+    </div>
+    <div class="dv-opt" id="1h">
+      <div class="dv-olabel"><a class="dv-oid" href="#1h">1h</a>Morning · 7:20 AM greeting</div>
+      <div class="dv-card" style="width:640px"><dc-import name="TVHome" variant="a" tod="morning" scale="0.5" hint-size="640px,360px"></dc-import></div>
+    </div>
+    <div class="dv-opt" id="1i">
+      <div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>Reduced motion · same end state, snaps in 110 ms (click, then use arrows)</div>
+      <div class="dv-card" style="width:640px"><dc-import name="TVHome" variant="a" focus="dock3" reduced-motion="{{ true }}" scale="0.5" hint-size="640px,360px"></dc-import></div>
+      <div style="font:400 11px/1.4 'JetBrains Mono',monospace; color:rgba(0,0,0,.5); max-width:640px">Premium survives: the 1.12× lift reads the same at rest. You lose the springy settle, which most guests won't miss.</div>
+    </div>
+  </div>
+  <p class="dv-next">Try next: "<a class="dv-oid" href="#1b">1b</a> layout with <a class="dv-oid" href="#1d">1d</a>'s focus tint" · "<a class="dv-oid" href="#1c">1c</a> but with the clock smaller" · "write the config.json and code plan for the pick"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;guides&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;reducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return { guides: this.props.guides ?? true, rm: this.props.reducedMotion ?? false };
+  }
+}
+</script>
+</body>
+</html>

@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -116,6 +117,12 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     /** The same for either layout: the plain grid (dock_row false) uses the compact spacing. */
     static int itemHeightPx(int tileHeightPx, boolean dockRow, float density) {
+        return itemHeightPx(tileHeightPx, dockRow, true, density);
+    }
+
+    /** With tile_names off the name row goes, and the padding grows to keep a real gap between rows. */
+    static int itemHeightPx(int tileHeightPx, boolean dockRow, boolean tileNames, float density) {
+        if (!tileNames) return tileHeightPx + Math.round(NO_NAMES_ITEM_EXTRA_DP * density);
         return tileHeightPx + Math.round((dockRow ? ITEM_EXTRA_DP : COMPACT_ITEM_EXTRA_DP) * density);
     }
 
@@ -126,6 +133,9 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     static final float COMPACT_ITEM_EXTRA_DP = 4 + 4 + 4 + 20;
     static final float COMPACT_BOTTOM_ROOM_DP = 16;
+
+    /** tile_names off: 8dp above and below each tile, so neighbouring rows sit ~16dp apart. */
+    static final float NO_NAMES_ITEM_EXTRA_DP = 8 + 8;
 
     /** item_app.xml: 8dp padding above and below, a 7dp gap and the 22dp name label under the tile. */
     static final float ITEM_EXTRA_DP = 45;
@@ -176,6 +186,8 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final boolean dockRow;
     /** config always_show_names: the alpha of an unfocused tile's name (0 hides it). */
     private final float restNameAlpha;
+    private final boolean tileNames;
+    private final boolean focusLift;
     /** cinematic_home: only then does a launch record the last-opened app the shelf uses. */
     private final boolean cinematic;
     /** Dock order (config.xml dock_apps, or a theme's config.json). */
@@ -216,6 +228,8 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.dockTitle = cfg.dockTitle;
         this.dockRow = cfg.dockRow;
         this.restNameAlpha = cfg.alwaysShowNames ? 0.75f : 0f;
+        this.tileNames = cfg.tileNames;
+        this.focusLift = cfg.focusLift;
         this.cinematic = cfg.cinematicHome;
         this.launchActions = cfg.launchActions;
         this.appLabels = cfg.appLabels;
@@ -386,8 +400,15 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             int pad = Math.round(4 * density);
             v.setPadding(v.getPaddingLeft(), pad, v.getPaddingRight(), pad);
         }
+        if (!tileNames) {
+            // No name row at all. The padding carries the gap between rows instead, so they do not touch.
+            nameLp.height = 0;
+            name.setVisibility(View.GONE);
+            int pad = Math.round(8 * density);
+            v.setPadding(v.getPaddingLeft(), pad, v.getPaddingRight(), pad);
+        }
         name.setLayoutParams(nameLp);
-        return new Holder(v, listener, animations, advancedEffects, reducedMotion, restNameAlpha);
+        return new Holder(v, listener, animations, advancedEffects, reducedMotion, focusLift, restNameAlpha);
     }
 
     @Override
@@ -410,12 +431,14 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         h.card.setFocusable(true);
         h.name.setText(e.name);
         // The dock has no labels, unless always_show_names asks for them (DockDecoration then makes room in the band).
-        h.name.setVisibility(dockRow && position < dockSize && restNameAlpha == 0f ? View.INVISIBLE : View.VISIBLE);
+        h.name.setVisibility(!tileNames ? View.GONE
+                : dockRow && position < dockSize && restNameAlpha == 0f ? View.INVISIBLE : View.VISIBLE);
         boolean focused = h.card.isFocused();   // a rebind after reload() can hit the focused tile
         h.name.setAlpha(focused ? 1f : restNameAlpha);
         h.card.setScaleX(focused && animations ? focusScale() : 1f);
         h.card.setScaleY(focused && animations ? focusScale() : 1f);
-        h.card.setTranslationY(focused && advancedEffects ? -4f * ctx.getResources().getDisplayMetrics().density : 0f);
+        h.card.setTranslationY(focused && (advancedEffects || focusLift)
+                ? -4f * ctx.getResources().getDisplayMetrics().density : 0f);
         h.card.setTranslationZ(focused && advancedEffects ? 8f * ctx.getResources().getDisplayMetrics().density : 0f);
         h.banner.setScaleX(focused && advancedEffects ? 1.035f : 1f);
         h.banner.setScaleY(focused && advancedEffects ? 1.035f : 1f);
@@ -580,7 +603,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     float focusScale() {
-        return !animations ? 1f : advancedEffects ? 1.12f : 1.10f;
+        return !animations ? 1f : (advancedEffects || focusLift) ? 1.12f : 1.10f;
     }
 
     /** A vivid colour sampled from the app's banner (or icon), cached per entry; a card's accent when it set one. */
@@ -652,11 +675,13 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final boolean animations;
         final boolean advancedEffects;
         final boolean reducedMotion;
+        /** focus_lift: the 1.12 scale and 4dp lift without the rest of advanced_effects. */
+        final boolean focusLift;
         /** Alpha of the name while the tile is not focused (always_show_names). */
         final float restNameAlpha;
 
         Holder(View v, TileListener listener, boolean animations, boolean advancedEffects,
-               boolean reducedMotion, float restNameAlpha) {
+               boolean reducedMotion, boolean focusLift, float restNameAlpha) {
             super(v);
             card = v.findViewById(R.id.card);
             cardBackground = card.getBackground();
@@ -667,6 +692,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             this.animations = animations;
             this.advancedEffects = advancedEffects;
             this.reducedMotion = reducedMotion;
+            this.focusLift = focusLift;
             this.restNameAlpha = restNameAlpha;
 
             final float density = v.getResources().getDisplayMetrics().density;
@@ -691,7 +717,8 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 view.animate().cancel();
                 banner.animate().cancel();
                 name.animate().cancel();
-                float scale = !animations ? 1f : advancedEffects ? 1.12f : 1.10f;
+                boolean lift = advancedEffects || focusLift;
+                float scale = !animations ? 1f : lift ? 1.12f : 1.10f;
                 float s = focused ? scale : 1f;
                 if (!animations) {
                     view.setScaleX(1f);
@@ -704,10 +731,10 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     name.setTranslationY(0f);
                 } else if (reducedMotion) {
                     view.animate().scaleX(s).scaleY(s)
-                            .translationY(focused && advancedEffects ? -4f * density : 0f)
+                            .translationY(focused && lift ? -4f * density : 0f)
                             .translationZ(focused && advancedEffects ? 8f * density : 0f)
-                            .setDuration(focused ? 120 : 80)
-                            .setInterpolator(new DecelerateInterpolator())
+                            .setDuration(focusLift ? 110 : (focused ? 120 : 80))
+                            .setInterpolator(focusLift ? new LinearInterpolator() : new DecelerateInterpolator())
                             .withLayer().start();
                     name.animate().alpha(focused ? 1f : restNameAlpha).setDuration(100).start();
                     // Same place as the full motion's slide ends: the layout's -6dp is only its starting point, and
@@ -716,10 +743,12 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (focused) name.setTranslationY(density * 4f);
                 } else {
                     view.animate().scaleX(s).scaleY(s)
-                            .translationY(focused && advancedEffects ? -4f * density : 0f)
+                            .translationY(focused && lift ? -4f * density : 0f)
                             .translationZ(focused && advancedEffects ? 8f * density : 0f)
-                            .setDuration(advancedEffects ? (focused ? 220 : 170) : (focused ? 260 : 180))
-                            .setInterpolator(new OvershootInterpolator(focused ? (advancedEffects ? 0.7f : 1.6f) : 0f))
+                            .setDuration(focusLift ? (focused ? 360 : 240)
+                                    : advancedEffects ? (focused ? 220 : 170) : (focused ? 260 : 180))
+                            .setInterpolator(new OvershootInterpolator(
+                                    focused ? (focusLift ? 1.1f : advancedEffects ? 0.7f : 1.6f) : 0f))
                             .withLayer().start();
                     if (advancedEffects) {
                         banner.animate().scaleX(focused ? 1.035f : 1f).scaleY(focused ? 1.035f : 1f)

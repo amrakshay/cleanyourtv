@@ -1,0 +1,28 @@
+{
+  "greeting_name": "Akshay",
+  "dock_apps": [
+    "in.startv.hotstar",
+    "com.google.android.youtube.tv",
+    "com.netflix.ninja",
+    "org.videolan.vlc"
+  ],
+  "hidden_apps": [
+    "com.mitv.dream",
+    "com.xiaomi.mitv.smartshare"
+  ],
+  "live_tv_package": "com.android.tv",
+  "columns": 4,
+  "dock_row": false,
+  "dock_title": false,
+  "always_show_names": false,
+  "wallpaper": false,
+  "ambient_glow": false,
+  "cinematic_home": false,
+  "advanced_effects": false,
+  "reduced_motion": false,
+  "show_stats": false,
+  "sky_intensity": 0,
+  "horizon_background": true,
+  "tile_names": false,
+  "focus_lift": true
+}

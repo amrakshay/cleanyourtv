@@ -141,6 +141,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean heroShown;
     private boolean animations;
     private boolean advancedEffects;
+    /** focus_lift: the focused tile lifts 4dp, so the glass highlight has to lift with it. */
+    private boolean focusLift;
     private TextView greeting;
     private View clockBlock;
     private View btnInputs;
@@ -310,6 +312,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         COLUMNS = cfg.columns;
         animations = cfg.animations;
         advancedEffects = cfg.animations && cfg.advancedEffects;
+        focusLift = cfg.animations && cfg.focusLift;
         reducedMotion = cfg.reducedMotion;
         dockRow = cfg.dockRow;
         festival = cfg.festival;
@@ -322,7 +325,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         sourcePanelAction = cfg.sourcePanelAction;
 
         root = findViewById(R.id.root);
-        root.setBackgroundColor(cfg.backgroundColor);
+        // horizon_background swaps the flat colour for one static elliptical gradient. It goes on root, not
+        // on the window, for the reason the window is nulled below: whichever one paints, it is a single
+        // full-screen fill, and painting both would be two.
+        if (cfg.horizonBackground) root.setBackground(new HorizonBackground());
+        else root.setBackgroundColor(cfg.backgroundColor);
         // root fills the window with an opaque colour (Config keeps background_color opaque), so the window's own
         // black under it is a second full-screen fill on every frame for nothing. The starting window still uses
         // the theme's background, so launch looks the same.
@@ -452,7 +459,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             // Item height follows the tile size, which follows the columns and the rows that must fit (AppAdapter.tileWidthPx).
             int inner = (r - l) - grid.getPaddingLeft() - grid.getPaddingRight();
             int tileW = AppAdapter.tileWidthPx(inner, h, COLUMNS, rowsBelowDock, cfg.dockTitle, cfg.dockRow, density);
-            int itemH = AppAdapter.itemHeightPx(AppAdapter.tileHeightPx(tileW), density);
+            int itemH = AppAdapter.itemHeightPx(AppAdapter.tileHeightPx(tileW), cfg.dockRow, cfg.tileNames, density);
             int dockRow = itemH + (int) (AppAdapter.DOCK_EXTRA_DP * density);   // item height plus DockDecoration offsets
             int gridRows = itemH * rowsBelowDock;
             // Keep the hero below the header when the library is enabled on a short screen,
@@ -1188,7 +1195,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         float w = card.getWidth() * scale + 2 * pad;
         float h = card.getHeight() * scale + 2 * pad;
         float x = r.exactCenterX() - w / 2f;
-        float y = r.exactCenterY() - h / 2f - (advancedEffects ? 4f * density : 0f);
+        // The lift is the tile's, so the glass takes the same 4dp or it sits low behind a lifted tile.
+        float y = r.exactCenterY() - h / 2f - (advancedEffects || focusLift ? 4f * density : 0f);
 
         ViewGroup.LayoutParams lp = glass.getLayoutParams();
         if (lp.width != (int) w || lp.height != (int) h || card.getWidth() != glassCardW) {
@@ -1915,11 +1923,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private void updateGreeting() {
         int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         int res;
-        if (hour < 5) res = R.string.good_night;
+        // 05-11 morning, 12-16 afternoon, 17-22 evening, 23-04 late night. 22:00 reads as evening, not
+        // night: on a TV the set is usually still being watched then.
+        if (hour < 5 || hour >= 23) res = R.string.greeting_late_night;
         else if (hour < 12) res = R.string.good_morning;
         else if (hour < 17) res = R.string.good_afternoon;
-        else if (hour < 22) res = R.string.good_evening;
-        else res = R.string.good_night;
+        else res = R.string.good_evening;
         String festiveGreeting = festive ? festival.greetingText() : "";
         if (!festiveGreeting.isEmpty()) {
             greeting.setText(festiveGreeting);

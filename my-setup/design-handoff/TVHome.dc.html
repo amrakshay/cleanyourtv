@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"></helmet>
+<div style="{{ outerStyle }}">
+  <div tabIndex="0" onKeyDown="{{ onKey }}" style="{{ screenStyle }}">
+    <sc-for list="{{ bgLayers }}" as="L" hint-placeholder-count="1"><div style="{{ L.style }}"></div></sc-for>
+
+    <sc-if value="{{ guides }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute; inset:27px 48px; border:1px dashed rgba(255,255,255,.14); border-radius:4px; pointer-events:none"></div>
+      <div style="position:absolute; left:0; top:0; width:420px; height:150px; border:1px dashed rgba(255,110,110,.7); background:rgba(255,80,80,.07); display:flex; align-items:flex-end; padding:10px 12px; box-sizing:border-box; pointer-events:none">
+        <span style="font:500 10px/1.3 'JetBrains Mono',monospace; color:rgba(255,150,150,.9); letter-spacing:.06em">ENERGY-LABEL STICKER ZONE · KEEP CLEAR</span>
+      </div>
+    </sc-if>
+
+    <div style="{{ headerWrapStyle }}">
+      <sc-if value="{{ headerA }}" hint-placeholder-val="{{ true }}">
+        <div style="font:500 13px/1 Roboto,sans-serif; letter-spacing:.24em; text-transform:uppercase; color:rgba(255,255,255,.72)">{{ greeting }}</div>
+        <div style="display:flex; align-items:baseline; gap:8px; margin-top:10px">
+          <span style="font:100 66px/1 Roboto,sans-serif; color:#fff; letter-spacing:-.01em">{{ time }}</span>
+          <span style="font:400 15px/1 Roboto,sans-serif; color:rgba(255,255,255,.8); letter-spacing:.08em">{{ ampm }}</span>
+        </div>
+        <div style="font:400 12px/1 Roboto,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-top:10px">{{ date }}</div>
+      </sc-if>
+      <sc-if value="{{ headerB }}" hint-placeholder-val="{{ false }}">
+        <div style="font:300 32px/1.1 Roboto,sans-serif; color:#fff; letter-spacing:-.005em">{{ greetingSentence }}</div>
+        <div style="display:flex; gap:14px; align-items:baseline; margin-top:12px; font:300 21px/1 Roboto,sans-serif; color:rgba(255,255,255,.66)">
+          <span style="color:#fff; font-weight:400">{{ time }} {{ ampm }}</span>
+          <span style="width:1px; height:18px; background:rgba(255,255,255,.25); align-self:center"></span>
+          <span>{{ date }}</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{ headerC }}" hint-placeholder-val="{{ false }}">
+        <div style="font:500 13px/1 Roboto,sans-serif; letter-spacing:.24em; text-transform:uppercase; color:rgba(255,255,255,.72)">{{ greeting }}</div>
+        <div style="font:100 136px/.92 Roboto,sans-serif; color:#fff; letter-spacing:-.025em; margin-top:8px">{{ time }}</div>
+        <div style="font:400 12px/1 Roboto,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.55); margin-top:12px">{{ ampm }} · {{ date }}</div>
+      </sc-if>
+      <div style="{{ pillsRowStyle }}">
+        <sc-for list="{{ pills }}" as="p" hint-placeholder-count="3">
+          <div onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.label }}</div>
+        </sc-for>
+      </div>
+    </div>
+
+    <sc-if value="{{ showHairline }}" hint-placeholder-val="{{ false }}">
+      <div style="{{ hairlineStyle }}"></div>
+    </sc-if>
+    <div style="{{ bandStyle }}">
+      <sc-for list="{{ dock }}" as="t" hint-placeholder-count="4">
+        <div onClick="{{ t.onClick }}" style="{{ t.style }}"><span style="{{ t.wordStyle }}">{{ t.name }}</span></div>
+      </sc-for>
+    </div>
+    <div style="{{ gridStyle }}">
+      <sc-for list="{{ grid }}" as="t" hint-placeholder-count="3">
+        <div onClick="{{ t.onClick }}" style="{{ t.style }}"><span style="{{ t.wordStyle }}">{{ t.name }}</span></div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:720},&quot;variant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;d&quot;],&quot;default&quot;:&quot;a&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;focus&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;dock0&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tod&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;morning&quot;,&quot;afternoon&quot;,&quot;evening&quot;,&quot;night&quot;],&quot;default&quot;:&quot;evening&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;dim&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;reducedMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;guides&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;scale&quot;:{&quot;editor&quot;:&quot;float&quot;,&quot;default&quot;:1,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  state = { row: null, i: null };
+  DOCK = [
+    { name: 'Hotstar', bg: 'linear-gradient(135deg,#1c2fe0 0%,#5a2ee6 55%,#c61cd8 100%)', fg: '#fff', hue: 285, w: 400 },
+    { name: 'YouTube', bg: '#f3f3f3', fg: '#e31b1b', hue: 25, w: 500 },
+    { name: 'NETFLIX', bg: '#0c0c0c', fg: '#e50914', hue: 20, w: 500, ls: '.06em' },
+    { name: 'VLC', bg: '#f5a31a', fg: '#fff', hue: 65, w: 500 }
+  ];
+  GRID = [
+    { name: 'Live TV', bg: '#0e8c83', fg: '#fff', hue: 185, w: 400 },
+    { name: 'Play Store', bg: '#ffffff', fg: '#1a73e8', hue: 250, w: 500 },
+    { name: 'Mi Media Explorer', bg: '#2d66f5', fg: '#fff', hue: 262, w: 400 }
+  ];
+  PILLS = ['Inputs', 'Akshay_WiFi', 'Settings'];
+  cur() {
+    if (this.state.row) return { row: this.state.row, i: this.state.i };
+    const f = this.props.focus ?? 'dock0';
+    return { row: f.replace(/\d+$/, ''), i: parseInt(f.match(/\d+$/)?.[0] ?? '0', 10) };
+  }
+  setF(row, i) { this.setState({ row, i }); }
+  onKey = (e) => {
+    const rows = ['pills', 'dock', 'grid'], len = { pills: 3, dock: 4, grid: 3 };
+    let { row, i } = this.cur(); let r = rows.indexOf(row);
+    if (e.key === 'ArrowLeft') i = Math.max(0, i - 1);
+    else if (e.key === 'ArrowRight') i = Math.min(len[row] - 1, i + 1);
+    else if (e.key === 'ArrowUp') r = Math.max(0, r - 1);
+    else if (e.key === 'ArrowDown') r = Math.min(2, r + 1);
+    else return;
+    e.preventDefault();
+    row = rows[r]; i = Math.min(i, len[row] - 1);
+    this.setF(row, i);
+  };
+  renderVals() {
+    const v = this.props.variant ?? 'a';
+    const scale = this.props.scale ?? 1;
+    const rm = !!this.props.reducedMotion;
+    const dim = !!this.props.dim;
+    const tod = this.props.tod ?? 'evening';
+    const morning = tod === 'morning';
+    const TOD = { morning: ['Good morning', '7:20', 'AM'], afternoon: ['Good afternoon', '2:10', 'PM'], evening: ['Good evening', '8:45', 'PM'], night: ['Late night', '11:40', 'PM'] }[tod] ?? ['Good evening', '8:45', 'PM'];
+    const { row, i } = this.cur();
+    const dockTop = v === 'c' ? 368 : v === 'b' ? 250 : 352;
+    const bandH = 186, gridTop = dockTop + bandH + 34;
+    const ease = rm ? '110ms linear' : '360ms cubic-bezier(.3,1.55,.5,1)';
+    const focusedApp = row === 'dock' ? this.DOCK[i] : row === 'grid' ? this.GRID[i] : this.DOCK[0];
+    const tile = (a, focused, big, onClick) => {
+      const s = focused ? (dim ? 1.04 : 1.12) : 1;
+      return {
+        name: a.name, onClick,
+        style: { width: big ? 266 : 200, height: big ? 150 : 112, flex: 'none', borderRadius: 14, background: a.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: focused ? 2 : 1, cursor: 'pointer', boxSizing: 'border-box', transform: `translateY(${focused && !dim ? -4 : 0}px) scale(${s})`, transition: `transform ${ease}, box-shadow ${rm ? '110ms linear' : '300ms ease'}`, boxShadow: focused && !dim ? '0 18px 34px rgba(0,0,0,.7), 0 0 0 1.5px rgba(255,255,255,.22)' : '0 0 0 1px rgba(255,255,255,.07)' },
+        wordStyle: { font: `${a.w} ${big ? 30 : 19}px/1 Roboto, sans-serif`, color: a.fg, letterSpacing: a.ls ?? '-.01em', textAlign: 'center', padding: '0 12px' }
+      };
+    };
+    const bgFor = (h, op) => ({ position: 'absolute', inset: 0, opacity: op, transition: `opacity ${rm ? '120ms' : '220ms'} linear`,
+      background: v === 'b'
+        ? 'radial-gradient(62% 105% at 42% 42%, #1f45f0 0%, #1533c8 28%, #0c1f86 55%, #060d3a 80%, #02040f 100%)'
+        : `radial-gradient(130% 85% at 50% 112%, oklch(0.31 0.11 ${h}) 0%, oklch(0.15 0.06 ${h}) 38%, #000 72%)` });
+    const bgLayers = v === 'd'
+      ? [...this.DOCK, ...this.GRID].map(a => ({ style: bgFor(a.hue, a === focusedApp ? 1 : 0) }))
+      : [{ style: bgFor(262, 1) }];
+    const tintBorder = v === 'd' ? `oklch(0.6 0.12 ${focusedApp.hue} / .35)` : 'rgba(255,255,255,.08)';
+    return {
+      guides: !!this.props.guides,
+      onKey: this.onKey,
+      outerStyle: { width: 1280 * scale, height: 720 * scale, position: 'relative', overflow: 'hidden', background: '#000' },
+      screenStyle: { position: 'absolute', left: 0, top: 0, width: 1280, height: 720, transform: `scale(${scale})`, transformOrigin: '0 0', background: '#000', overflow: 'hidden', outline: 'none', fontFamily: 'Roboto, sans-serif' },
+      bgLayers,
+      headerWrapStyle: { position: 'absolute', right: 56, top: 38, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', textAlign: 'right', opacity: dim ? .5 : 1, transition: 'opacity 400ms linear' },
+      pillsRowStyle: v === 'b' ? { display: 'flex', gap: 10, order: -1, marginBottom: 26 } : { display: 'flex', gap: 10, marginTop: 20 },
+      headerA: v === 'a' || v === 'd', headerB: v === 'b', headerC: v === 'c',
+      greeting: TOD[0] + ', Akshay',
+      greetingSentence: TOD[0] + ', Akshay',
+      time: TOD[1], ampm: TOD[2],
+      date: v === 'b' ? (morning ? 'Thursday 22 October' : 'Wednesday 21 October') : (morning ? 'Thursday 22 October' : 'Wednesday 21 October'),
+      pills: this.PILLS.map((label, k) => {
+        const f = row === 'pills' && i === k;
+        return { label, onClick: () => this.setF('pills', k), style: { height: 32, padding: '0 15px', borderRadius: 16, display: 'flex', alignItems: 'center', font: '400 13px/1 Roboto, sans-serif', cursor: 'pointer', transition: `background ${ease}, color ${ease}`, background: f ? '#fff' : 'rgba(255,255,255,.07)', color: f ? '#0a0a0a' : 'rgba(255,255,255,.86)', border: f ? '1px solid #fff' : '1px solid rgba(255,255,255,.14)' } };
+      }),
+      showHairline: false,
+      hairlineStyle: { position: 'absolute', left: 56, top: dockTop + bandH - 8, width: 1168, height: 1, background: 'linear-gradient(90deg, transparent, rgba(160,185,255,.55) 18%, rgba(160,185,255,.55) 82%, transparent)' },
+      bandStyle: { position: 'absolute', left: 56, top: dockTop, width: 1168, height: bandH, boxSizing: 'border-box', padding: 18, display: 'flex', gap: 22, alignItems: 'center', borderRadius: 28, background: v === 'b' ? 'transparent' : 'rgba(255,255,255,.035)', border: v === 'b' ? '1px solid transparent' : `1px solid ${tintBorder}`, transition: 'border-color 220ms linear' },
+      dock: this.DOCK.map((a, k) => tile(a, row === 'dock' && i === k, true, () => this.setF('dock', k))),
+      gridStyle: { position: 'absolute', left: 74, top: gridTop, display: 'flex', gap: 22 },
+      grid: this.GRID.map((a, k) => tile(a, row === 'grid' && i === k, v === 'b', () => this.setF('grid', k)))
+    };
+  }
+}
+</script>
+</body>
+</html>

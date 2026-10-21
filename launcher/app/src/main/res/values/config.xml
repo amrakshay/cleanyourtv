@@ -168,6 +168,16 @@
 
     <!-- One line under the clock: CPU, free memory and free storage. Off by default; a theme can set
          "show_stats": true. Nothing is read, and the clock does not move, while this is false. -->
+    <!-- Tile names at all; false drops the name row under every tile, the focused one included, for
+         layouts that read from the artwork alone. Independent of always_show_names. -->
+    <bool name="tile_names">true</bool>
+    <!-- Focused tile scales 1.12 and lifts 4dp, without the icon zoom, ambient fade and app-open effects
+         that advanced_effects also turns on. A view transform only: no blur, no new layer. -->
+    <bool name="focus_lift">false</bool>
+    <!-- The "Horizon" background: one static elliptical radial gradient, deep blue at the centre falling
+         to near-black at the edges, drawn as the window background instead of background_color. No
+         bitmap and no animation; see HorizonBackground. -->
+    <bool name="horizon_background">false</bool>
     <bool name="show_stats">false</bool>
 
     <!-- Time-of-day backdrop behind everything: a dark gradient that follows the clock, with a warm
