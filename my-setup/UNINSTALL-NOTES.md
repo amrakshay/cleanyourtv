@@ -93,6 +93,13 @@ Performance changes applied 2026-10-21:
 - Play Store auto-update was NOT changed: it is not settable over ADB. Do it on the TV at
   Play Store > profile > Settings > Network preferences > Auto-update apps.
 
+### SmartTube (on trial, added 21 Oct 2026)
+
+`org.smarttube.stable` 32.68, sideloaded from the official GitHub release -- an ad-free YouTube
+client. Signed out on purpose. Full record, including the signing-certificate hash to verify any
+future update against, in `my-setup/smarttube.md`. Remove with:
+`pm uninstall org.smarttube.stable` -- nothing else was changed for it.
+
 ### Undo the launcher only
 
 ```

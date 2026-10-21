@@ -31,6 +31,7 @@ certainly stale. Re-discover the TV rather than trusting it.
 | `theme/config.json` | The launcher theme: dock, greeting name, Live TV app, and the Horizon look |
 | `design-handoff/` | The design brief the Horizon layout was built from. Open the `.dc.html` files in a browser (`support.js` is their runtime) |
 | `screenshots/` | Before and after, captured from the TV |
+| `smarttube.md` | SmartTube, the ad-free YouTube client **currently on trial**. Signing-certificate hash to check future updates against, and how to keep or remove it |
 
 ## Restoring the TV to stock
 
@@ -78,6 +79,8 @@ TV_HOST=<tv ip> tools/theme.sh --reset             # or drop back to the built-i
   Play Store → profile → Settings → Network preferences → Auto-update apps.
 
 ## Still open
+
+- **SmartTube is on trial** (installed 21 Oct 2026, decide around 24 Oct). See `smarttube.md`.
 
 - Network ADB (port 5555) was left **open** on the TV. Close it: Developer options → USB debugging
   off → revoke authorisations → reboot, then check with `tools/adb-closed.py <tv ip>`.
