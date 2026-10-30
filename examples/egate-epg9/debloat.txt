@@ -1,0 +1,130 @@
+# E-Gate LED projector, sold as EPG9 / EGP9 "Atom 2X Plus"
+# Firmware identifies as: ro.product.model=t950s_be311, board t950s_be311, platform txhd2,
+# Android 13 (SDK 33), build be311-13 TQ2A.230405.003.E1-1750240472, ro.product.manufacturer=Google.
+# An Amlogic (droidlogic) Android TV AOSP build with no E-Gate branding anywhere in the firmware.
+# The vendor's page claims Android 11 on an Allwinner H713; the device says otherwise. Surveyed
+# 30 October 2026, applied the same day. NOT YET LIVED WITH, and not yet seen through a reboot —
+# see README.md.
+#
+# Apply:   TV_HOST=<projector ip> tools/disable.sh examples/egate-epg9/debloat.txt
+# Undo:    TV_HOST=<projector ip> tools/restore.sh examples/egate-epg9/debloat.txt com.htc.htclauncherhighenglishd08
+# Everything is DISABLED, not uninstalled. Comment out any line you want to keep.
+#
+# NEVER DISABLE com.jm.jmlauncher ON THIS FIRMWARE. Verified on 30 October 2026: disable it, force-stop
+# the stock launcher and press HOME, and the projector lands on com.android.tv.settings/.system.FallbackHome
+# — Android's blank placeholder — with the stock launcher still enabled and still resolving as the HOME
+# handler. It simply does not start. Both packages run in the shared user android.uid.system (uid 1000)
+# and come from the same vendor (JmLauncher, JMFactory), so the "HTC" launcher is a front for JM code
+# rather than a self-contained app. Re-enabling com.jm.jmlauncher brings the home screen straight back.
+# It is left in the list below, commented out, so nobody adds it again.
+#
+# com.master.apps and com.google.android.tvrecommendations were suspected with it and are cleared:
+# each was disabled on its own, with the launcher force-stopped and HOME pressed, and the home screen
+# started normally. Both are active in the list.
+#
+# All 22 below are applied and the home screen starts. On the unit this list was written from, the
+# eight /data packages among them were afterwards uninstalled outright rather than left disabled
+# (README.md says which, and how they were backed up first); they are kept in the list because on
+# another unit they will still be installed.
+#
+# All 22 below are applied and the home screen starts. Apply a list like this in batches with a HOME
+# press between them: that is how the one bad package gets found without a mystery.
+#
+# Stock launcher: com.htc.htclauncherhighenglishd08 (nothing to do with HTC; it is the only app on
+# the device that answers HOME, so disable.sh will refuse to disable it until another one is
+# installed). com.google.android.leanbacklauncher is present and is the Android TV launcher: making
+# that Home is the quickest improvement here, before or instead of building a new launcher.
+#
+# DO NOT DISABLE on this model:
+# com.softwinner.tcorrection      # KEYSTONE. The name says nothing: its only activity is
+#                                 # .projection.ProjectionSettingActivity. Disable it and the
+#                                 # picture stays crooked with nothing in the menus to fix it.
+# com.droidlogic.tvinput          # every HDMI, AV, ARC, SPDIF and tuner input on the box
+# com.droidlogic                  # core Amlogic system service
+# com.droidlogic.tv.settings      # projector settings
+# com.droidlogic.droidlivetvsettings
+# com.htc.htcsettings             # the settings app that holds WRITE_SECURE_SETTINGS; the ADB
+#                                 # toggle is here, so losing it can cost you the way back in
+# com.droidlogic.inputmethod.remote   # the remote control's input method
+
+# Unknown vendor packages with no user interface
+# com.abc.ninja lives in /system/app/NetflixNinja and is GRANTED both INSTALL_PACKAGES (the
+# privileged one, not the "ask the user" REQUEST_INSTALL_PACKAGES) and WRITE_SECURE_SETTINGS, has
+# INTERNET and a boot receiver, and registers no launcher activity. Granted, not just requested:
+# it can install an app without a prompt, and it can write enabled_accessibility_services, which is
+# how a dormant accessibility service gets switched on. It is the single best reason to run this list.
+com.abc.ninja
+com.master.apps                   # /system/priv-app/AllApp. SYSTEM_ALERT_WINDOW + boot receiver, one
+                                  # bare MainActivity. Tested on its own: the home screen is fine without it.
+
+# Accessibility-service packages
+# No accessibility service is enabled right now (`settings get secure enabled_accessibility_services`
+# is null). An accessibility service is how an installer taps "Install" for itself, and two packages
+# here hold the permission to be switched on later, so both stay off.
+com.mbox.accessibility             # /system/app/NetFocus, already disabled from the factory. Named
+                                   # for accessibility; it does NOT request BIND_ACCESSIBILITY_SERVICE.
+                                   # Listed so restore.sh leaves it disabled.
+com.master.accessibility           # /data, installed 2025-10-14. Requests BIND_ACCESSIBILITY_SERVICE,
+                                   # REQUEST_INSTALL_PACKAGES, SYSTEM_ALERT_WINDOW and a boot receiver.
+
+# Sideloaded stores
+# Both REQUEST the privileged INSTALL_PACKAGES but are NOT granted it (they are /data apps), so they
+# can only install through the usual "allow from this source" prompt. Both also ask for background
+# location on a projector.
+com.overseas.store.appstore        # installed 2025-06-18
+com.master.tv.market               # installed 2025-10-14
+
+# Sideloaded IPTV and streaming apps
+# None of these came from Play. Disable the ones you do not use; they are listed because a projector
+# bought in 2026 should not be shipping someone else's streaming front-ends.
+com.unitvnet.tvod
+com.nmvdo.tv
+com.world.youcinetv
+com.seraphic.openinet.jiumao
+
+# Spare launchers (the stock one stays; see the header)
+# com.jm.jmlauncher                # /system/app/JmLauncher. DO NOT DISABLE: the stock launcher does not
+                                   # start without it (see the header). Left here commented so it is not
+                                   # mistaken for an oversight.
+# com.ht1.launcher is in /data (installed 2026-05-10) and is GRANTED INSTALL_PACKAGES and
+# WRITE_SECURE_SETTINGS, plus PACKAGE_USAGE_STATS and a boot receiver. A launcher that can install
+# apps without a prompt and write secure settings is the second reason to run this list.
+com.ht1.launcher
+
+# Google phone and tablet leftovers on a TV build
+com.google.android.partnersetup
+com.google.android.syncadapters.contacts
+com.google.android.syncadapters.calendar
+com.google.android.onetimeinitializer
+com.android.printspooler            # no printer on a projector
+
+# --- Below here is a matter of taste: uncomment what you do not want ---
+
+# Root manager, preinstalled as a system app. Disabling the app does not remove whatever su binary
+# it manages, so treat this as a flag about the firmware rather than a fix. See README.md.
+# com.koushikdutta.superuser
+
+# Factory function-test app (com.fb/.functiontestapp.MainActivity, holds READ_LOGS). Left on because
+# test apps on these boards sometimes hold panel or lamp calibration, and this one was not opened.
+# com.fb
+
+# Google TV extras
+com.google.android.tvrecommendations  # the recommendation rows the stock launcher feeds on. Tested on
+                                      # its own: the home screen is fine without it.
+# com.google.android.katniss          # voice search and the Assistant
+# com.google.android.landscape        # Backdrop screensaver; point the screensaver somewhere else first
+
+# Amlogic media apps. Netflix, YouTube, Prime and MX Player bring their own players, so these are
+# only the bundled ones you would open from the launcher.
+com.droidlogic.imageplayer          # /system_ext/app/NativeImagePlayer
+com.droidlogic.musicplayer          # /vendor/app/MusicPlayer3
+com.droidlogic.videoplayer          # /system/priv-app/VideoPlayer
+com.droidlogic.mediacenter          # /product/app/DLNA
+com.droidlogic.FileBrower           # /vendor/app/FileBrowser2
+# com.droidlogic.miracast            # keep it if you cast from a phone
+# com.droidlogic.updater             # firmware updates: on a box like this, your call
+
+# Preloaded apps you may well use; listed so you can see them
+# com.mxtech.videoplayer.ad          # MX Player, ad-supported
+# com.ionitech.airscreen             # AirPlay/DLNA receiver
+# com.android.chrome
