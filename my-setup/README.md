@@ -81,8 +81,7 @@ TV_HOST=<tv ip> tools/theme.sh --reset             # or drop back to the built-i
 ## Still open
 
 
-- Network ADB (port 5555) was left **open** on the TV. Close it: Developer options → USB debugging
-  off → revoke authorisations → reboot, then check with `tools/adb-closed.py <tv ip>`.
-- The launcher holds `ACCESS_FINE_LOCATION`, granted by `build-and-install.sh` for the
-  sunrise/sunset backdrop, which this setup does not use. Revoke with
-  `pm revoke com.gathin.tvhome android.permission.ACCESS_FINE_LOCATION`.
+- Network ADB (port 5555) was **closed on 30 Oct 2026**. Re-enable it in Developer options if the
+  TV ever needs changing again; verify with `tools/adb-closed.py <tv ip>`.
+- The launcher's `ACCESS_FINE_LOCATION` was **revoked on 30 Oct 2026**. It was granted by
+  `build-and-install.sh` for the sunrise/sunset backdrop, which this setup does not use.
