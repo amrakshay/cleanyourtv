@@ -98,6 +98,17 @@ if (-not $env:TVINPUT_ALLOW -and $pkgs.Count -gt 0) {
         }
     }
 }
+# Same as disable.sh: keystone correction, autofocus, the ToF or gyro sensor behind "auto keystone" and
+# lamp, fan or lens motor control are ordinary-looking vendor packages, and a projector that loses one
+# shows a crooked or out-of-focus picture that no menu puts right. Matching on the name is blunt, so this
+# only ever skips, never disables. `$env:PROJECTOR_ALLOW=1` disables them anyway.
+if (-not $env:PROJECTOR_ALLOW -and $pkgs.Count -gt 0) {
+    $projectorRe = '(keyston|autokst|autofocus|trapezoid|correction|projection|gsensor|gyro|lensmotor)|(^|\.)(tof|lamp|fan|motor|focus|thermal|kst)(\.|$)'
+    foreach ($p in @($pkgs | Where-Object { $_ -imatch $projectorRe })) {
+        Write-Warning "Skipping ${p}: the name looks like projector hardware (keystone, autofocus, the ToF or gyro sensor behind auto keystone, or lamp, fan or lens control). Disabling one of those is how a projector ends up crooked or out of focus with nothing in the menus to fix it. On a TV this is a false positive: check what ${p} does, then set `$env:PROJECTOR_ALLOW=1."
+        $pkgs = @($pkgs | Where-Object { $_ -ne $p })
+    }
+}
 # Same as disable.sh: the state undo needs is recorded before the first command reaches the TV, and
 # a failed save leaves the TV untouched (#239).
 & $py -I (Join-Path $repo 'tools\recovery.py') --save $List

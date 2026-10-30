@@ -131,6 +131,7 @@ BYINTEK, JMGO, Portronics, Stellamore, Wanbo and XGIMI projectors
 | Chromecast with Google TV 4K (sabrina) | Google TV 14 |
 | Compac ATV R2 (SCBC R2, Realtek RTD285O) | Android TV 9 |
 | Dialog ViU (SEI Robotics SEI103DL, Amlogic, NES middleware), Sri Lanka | Android TV 9 |
+| E-Gate EPG9 / EGP9 "Atom 2X Plus" projector (firmware says `t950s_be311`, Amlogic `txhd2`) | Android 13 (AOSP TV, `ro.product.manufacturer=Google`) |
 | EKO 2K Google TV (MTC-built, tennoji, MediaTek mt5867 / T56) | Google TV 14 |
 | FFalcon (雷鸟) 鹤6 PRO 65S585C Pro (China, tcl_mt5879_cn, MediaTek MT9653) | Android TV 11 |
 | Freebox Player POP (Free, fbx8am, Amlogic), IPTV/DVB-T box | Android TV 10 |
@@ -354,6 +355,23 @@ the new launcher Home and the entry is applied; `FORCE_HOME=1` (`$env:FORCE_HOME
 </details>
 
 <details>
+<summary><b>How the scripts protect a projector's keystone and focus</b></summary>
+
+Projectors run the same Android and take the same lists, with one extra hazard: keystone correction,
+autofocus, the ToF or gyro sensor behind "auto keystone" and lamp, fan or lens motor control are
+ordinary vendor packages with ordinary names. Disable one and the picture is crooked or soft with
+nothing in the menus to put it right.
+
+`tools/disable.sh` (`disable.ps1`, and `check.py --fix`) skips a listed package whose name looks like
+one of those, says why, and disables the rest. The test is the name, which is a guess: short words
+such as `tof`, `fan` and `focus` only count as whole dot-separated segments, so `com.fancode.tv` is
+safe, and the pattern matches nothing that any list in `examples/` disables. On a TV a match is
+almost certainly a false positive — check what the package does, then set `PROJECTOR_ALLOW=1`
+(`$env:PROJECTOR_ALLOW`) to disable it anyway.
+
+</details>
+
+<details>
 <summary><b>Where your lists can live</b></summary>
 
 Debloat list paths passed to `disable.sh` and `restore.sh` are relative to the directory you run
@@ -546,7 +564,8 @@ and says so.
 It runs the same safety checks as `tools/disable.sh` before it disables anything, since an update is
 the moment they matter again: it leaves setupwraith on while the saved Wi-Fi network belongs to it
 (`FORCE_SETUPWRAITH=1` on Ethernet), leaves the packages under the HDMI/AV inputs on
-(`TVINPUT_ALLOW=1` if you really want them off), and never takes Home to a vendor `FallbackHome`.
+(`TVINPUT_ALLOW=1` if you really want them off), leaves a projector's keystone, focus and sensor
+packages on (`PROJECTOR_ALLOW=1`), and never takes Home to a vendor `FallbackHome`.
 Each package it leaves on comes with the reason and exits 1, because the TV is not back to the list
 until you deal with that one by hand.
 

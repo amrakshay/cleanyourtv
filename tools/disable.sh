@@ -134,6 +134,32 @@ if [ -n "$PKGS" ] && [ -z "${TVINPUT_ALLOW:-}" ]; then
   fi
 fi
 
+# Projector hardware (#projector-guard): keystone correction, autofocus, the ToF or gyro sensor
+# behind "auto keystone", and lamp, fan or lens motor control are ordinary-looking vendor packages,
+# and a projector that loses one shows a crooked or out-of-focus picture that no menu puts right.
+# The existing projector lists here carry them as DO-NOT-DISABLE comments (XGIMI com.xgimi.autokst
+# and com.xgimi.tof, JMGO com.jmgo.autofocus, BYINTEK com.sdt.projectionservice, Amlogic
+# com.droidlogic.keystone), which only helps someone who read that list first. "correction" is in the
+# pattern because an Amlogic/Allwinner projector carries its keystone as com.softwinner.tcorrection,
+# whose name says nothing about keystone at all: only its activity (.projection.ProjectionSettingActivity)
+# does, and a guard that reads activities would be a round trip per package.
+# Matching on the name is blunt, so it only ever skips, never disables: a false positive costs one
+# line in a list, a miss costs the picture. The short words are matched as whole dot-separated
+# segments, so com.fancode.tv is not caught by "fan"; "lens" alone is left out entirely because
+# com.google.android.apps.lens is a real package and a lens motor is named lensmotor or focus.
+# Checked against every list in examples/: it matches nothing any of them disables.
+# PROJECTOR_ALLOW=1 disables them anyway.
+PROJECTOR_RE='(keyston|autokst|autofocus|trapezoid|correction|projection|gsensor|gyro|lensmotor)|(^|\.)(tof|lamp|fan|motor|focus|thermal|kst)(\.|$)'
+if [ -n "$PKGS" ] && [ -z "${PROJECTOR_ALLOW:-}" ]; then
+  for p in $(printf '%s\n' "$PKGS" | grep -iE "$PROJECTOR_RE" || true); do
+    echo "Skipping $p: the name looks like projector hardware (keystone, autofocus, the ToF or gyro" >&2
+    echo "sensor behind auto keystone, or lamp, fan or lens control). Disabling one of those is how a" >&2
+    echo "projector ends up crooked or out of focus with nothing in the menus to fix it." >&2
+    echo "On a TV this is a false positive: check what $p does, then set PROJECTOR_ALLOW=1." >&2
+    PKGS="$(printf '%s\n' "$PKGS" | grep -vxF "$p" || true)"
+  done
+fi
+
 # The state undo needs goes to disk before the first command reaches the TV, and a failed save stops
 # here with the TV untouched: a record written afterwards would describe a TV that is already broken,
 # and a retry must not overwrite the one taken before the first change (#239).

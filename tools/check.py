@@ -41,6 +41,13 @@ FALLBACK_HOME_RE = re.compile(r"/\S*FallbackHome$")
 # The first-run wizard's app. Android deletes a Wi-Fi network saved by it the moment it is disabled.
 SETUPWRAITH = "com.google.android.tungsten.setupwraith"
 INPUT_PERMISSION = "android.permission.TV_INPUT_HARDWARE"
+# Projector hardware: keystone, autofocus, the ToF or gyro sensor behind "auto keystone", lamp, fan
+# and lens motor control. disable.sh skips these by name for the same reason --fix has to: a crooked
+# or soft picture is not something an owner can put back from the couch. Short words only count as
+# whole dot-separated segments, and "lens" is left out, so com.fancode.tv and
+# com.google.android.apps.lens are not caught.
+PROJECTOR_RE = re.compile(r"(keyston|autokst|autofocus|trapezoid|correction|projection|gsensor|gyro|lensmotor)"
+                          r"|(^|\.)(tof|lamp|fan|motor|focus|thermal|kst)(\.|$)", re.I)
 # Only the package's own "requested permissions" block counts: a vendor app in a shared UID would
 # otherwise match through its shared user's permissions, the same reason disable.sh scopes its grep.
 REQUESTED_RE = re.compile(r"requested permissions:(.*?)"
@@ -156,9 +163,9 @@ def safety_checks(dev, names):
     """The names disable.sh would leave enabled, each with the reason, as a list of (name, why).
 
     These are the checks disable.sh runs, in the same order, repeated here for the same reason they
-    exist there: each one is a package an owner cannot put back from the couch. FORCE_SETUPWRAITH=1
-    and TVINPUT_ALLOW=1 mean what they mean in disable.sh, so a TV on Ethernet or an owner who wants
-    the inputs off does not have to remember two switches.
+    exist there: each one is a package an owner cannot put back from the couch. FORCE_SETUPWRAITH=1,
+    TVINPUT_ALLOW=1 and PROJECTOR_ALLOW=1 mean what they mean in disable.sh, so a TV on Ethernet or an
+    owner who wants the inputs off does not have to remember a second set of switches.
     """
     skipped = []
     if SETUPWRAITH in names and not os.environ.get("FORCE_SETUPWRAITH"):
@@ -182,6 +189,17 @@ def safety_checks(dev, names):
                                       "disabled those ports stay black and only a full restore and "
                                       "a cold boot bring them back (set TVINPUT_ALLOW=1 to disable "
                                       "it)"))
+    if not os.environ.get("PROJECTOR_ALLOW"):
+        for name in names:
+            if any(name == skipped_name for skipped_name, _ in skipped):
+                continue
+            if PROJECTOR_RE.search(name):
+                skipped.append((name, "the name looks like projector hardware (keystone, autofocus, "
+                                      "the ToF or gyro sensor behind auto keystone, or lamp, fan or "
+                                      "lens control), and disabling one of those leaves a crooked or "
+                                      "out-of-focus picture that no menu puts right; on a TV this is "
+                                      "a false positive, so check what it does and set "
+                                      "PROJECTOR_ALLOW=1"))
     return skipped
 
 

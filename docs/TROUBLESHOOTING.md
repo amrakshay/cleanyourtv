@@ -145,6 +145,13 @@ Things that bit us or contributors, so they don't bite you. Commands use `tools/
   nothing else on the TV answers HOME, it skips that entry and says so (`FORCE_HOME=1` overrides),
   so applying a list before the handover no longer leaves the TV without a launcher. Apply the list
   again after the install script has made the new launcher Home to disable the old one.
+- **On a projector, keystone and autofocus live in packages you can disable by accident.** They
+  have ordinary vendor names (`com.xgimi.autokst`, `com.xgimi.tof`, `com.jmgo.autofocus`,
+  `com.sdt.projectionservice`, `com.droidlogic.keystone`), and once one is off the picture is
+  crooked or soft with nothing in the menus to correct it: restore the whole list and cold boot.
+  `tools/disable.sh` skips a listed package whose name looks like keystone, focus, a ToF or gyro
+  sensor, or lamp, fan or motor control, and says so (`PROJECTOR_ALLOW=1` overrides). The test is
+  the name, so on a TV a match is almost certainly a false positive.
 - **China-market Xiaomi rejects a default Home despite `set-home-activity` reporting success**,
   verified on MiTV-AETP0 (dofus), Android 9, firmware 22.9.2.851: the framework filters third-party
   HOME candidates by a package-name allowlist. Disabling the stock launcher then selects
